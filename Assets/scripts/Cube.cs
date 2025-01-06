@@ -5,10 +5,21 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(ColorChanger))]
 [RequireComponent(typeof(ExplosionHandler))]
+
 public class Cube : MonoBehaviour
 {
-    [SerializeField] private CubeSpawner cubeSpawner;
+    private CubeSpawner cubeSpawner;
     private float _splitChance = 1.0f;
+
+    private void Awake()
+    {
+        cubeSpawner = FindObjectOfType<CubeSpawner>();
+
+        if (cubeSpawner == null)
+        {
+            Debug.LogError("CubeSpawner не найден в сцене. Добавьте объект с CubeSpawner!");
+        }
+    }
 
     public void SetSplitChance(float chance)
     {
@@ -21,6 +32,7 @@ public class Cube : MonoBehaviour
         {
             SplitCube();
         }
+
         else
         {
             Destroy(gameObject);
@@ -29,11 +41,19 @@ public class Cube : MonoBehaviour
 
     private void SplitCube()
     {
+        if (cubeSpawner == null)
+        {
+            Debug.LogError("CubeSpawner отсутствует! Убедитесь, что он добавлен в сцену.");
+
+            return;
+        }
+
         int minCountCubes = 2;
         int maxCountCubes = 7;
+        int newCubesCount = Random.Range(minCountCubes, maxCountCubes);
+
         float divisionSplitChance = 2.0f;
 
-        int newCubesCount = Random.Range(minCountCubes, maxCountCubes);
         Vector3 originalPosition = transform.position;
         Vector3 originalScale = transform.localScale;
 
@@ -51,25 +71,5 @@ public class Cube : MonoBehaviour
         }
 
         Destroy(gameObject);
-    }
-
-    [System.Serializable]
-
-    public class CubeSpawner
-    {
-        [SerializeField] private Cube cubePrefab;
-
-        public Cube SpawnCube(Vector3 position, Vector3 scale, float splitChance)
-        {
-            float biasVector = 0.5f;
-            int biasScale = 2;
-
-            Vector3 newPosition = position + Random.insideUnitSphere * biasVector;
-            Cube newCube = Object.Instantiate(cubePrefab, newPosition, Random.rotation);
-            newCube.transform.localScale = scale / biasScale;
-            newCube.SetSplitChance(splitChance);
-
-            return newCube;
-        }
     }
 }
