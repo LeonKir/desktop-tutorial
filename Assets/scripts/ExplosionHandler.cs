@@ -1,22 +1,19 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class ExplosionHandler : MonoBehaviour
 {
-    [SerializeField] private float explosionForce = 300.0f;
-    [SerializeField] private float explosionRadius = 5.0f;
-
-    public void ApplyExplosion(Vector3 origin)
+    public void ApplyExplosion(Vector3 explosionPosition, float force = 10f, float radius = 5f)
     {
-        Rigidbody rigidbody = GetComponent<Rigidbody>();
-
-        if (rigidbody != null)
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
         {
-            Vector3 explosionDirection = (transform.position - origin).normalized;
-            rigidbody.AddExplosionForce(explosionForce, origin, explosionRadius);
+            Vector3 explosionDir = (transform.position - explosionPosition).normalized;
+            rb.AddForce(explosionDir * force, ForceMode.Impulse);
         }
         else
         {
-            Debug.LogWarning("Rigidbody not found on object: " + gameObject.name);
+            Debug.LogError("Rigidbody отсутствует! Убедитесь, что компонент добавлен.");
         }
     }
 }

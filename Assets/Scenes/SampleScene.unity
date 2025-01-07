@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e9c3d43ba91f9f4bbd17b99ffb14f4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cubePrefab: {fileID: 257071744}
+  _cubePrefab: {fileID: 257071744}
 --- !u!114 &257071744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,8 +192,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 029b31416a8513e46a41fd6f151f9c0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionForce: 300
-  explosionRadius: 5
 --- !u!114 &257071746
 MonoBehaviour:
   m_ObjectHideFlags: 0

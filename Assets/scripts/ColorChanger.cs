@@ -1,19 +1,18 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Renderer))]
 public class ColorChanger : MonoBehaviour
 {
     public void ChangeColor()
     {
         Renderer renderer = GetComponent<Renderer>();
-
         if (renderer != null)
         {
-            Color randomColor = new Color(Random.value, Random.value, Random.value);
-            renderer.material.color = randomColor;
+            renderer.material.color = Random.ColorHSV();
         }
         else
         {
-            Debug.LogWarning("Renderer not found on object: " + gameObject.name);
+            Debug.LogError("Renderer отсутствует! Убедитесь, что компонент добавлен.");
         }
     }
 }
