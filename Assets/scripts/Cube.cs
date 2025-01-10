@@ -5,24 +5,49 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(ColorChanger))]
 [RequireComponent(typeof(ExplosionHandler))]
+
 public class Cube : MonoBehaviour
 {
     private CubeSpawner _cubeSpawner;
+    private ColorChanger _colorChanger;
+    private ExplosionHandler _explosionHandler;
     private float _splitChance = 1.0f;
 
     private void Awake()
     {
         _cubeSpawner = FindObjectOfType<CubeSpawner>();
+        _colorChanger = GetComponent<ColorChanger>();
+        _explosionHandler = GetComponent<ExplosionHandler>();
 
         if (_cubeSpawner == null)
         {
             Debug.LogError("CubeSpawner не найден в сцене. Добавьте объект с CubeSpawner!");
+        }
+
+        if (_colorChanger == null)
+        {
+            Debug.LogError("ColorChanger отсутствует на кубе!");
+        }
+
+        if (_explosionHandler == null)
+        {
+            Debug.LogError("ExplosionHandler отсутствует на кубе!");
         }
     }
 
     public void SetSplitChance(float chance)
     {
         _splitChance = chance;
+    }
+
+    public void ChangeColor()
+    {
+        _colorChanger?.ChangeColor();
+    }
+
+    public void ApplyExplosion(Vector3 explosionPosition)
+    {
+        _explosionHandler?.ApplyExplosion(explosionPosition);
     }
 
     private void OnMouseDown()
@@ -43,21 +68,22 @@ public class Cube : MonoBehaviour
             return;
         }
 
-        int newCubesCount = Random.Range(2, 7);
+        int minCountCubes = 2;
+        int maxCountCubes = 7;
+        int newCubesCount = Random.Range(minCountCubes, maxCountCubes);
+        float bias = 0.5f;
+        float decreaseСhance = 2.0f;
 
         for (int i = 0; i < newCubesCount; i++)
         {
             Cube newCube = _cubeSpawner.SpawnCube(
-                transform.position + Random.insideUnitSphere * 0.5f,
-                transform.localScale * 0.5f,
-                _splitChance / 2.0f
+                transform.position + Random.insideUnitSphere * bias,
+                transform.localScale * bias,
+                _splitChance / decreaseСhance
             );
 
-            ColorChanger colorChanger = newCube.GetComponent<ColorChanger>();
-            colorChanger?.ChangeColor();
-
-            ExplosionHandler explosionHandler = newCube.GetComponent<ExplosionHandler>();
-            explosionHandler?.ApplyExplosion(transform.position);
+            newCube.ChangeColor();
+            newCube.ApplyExplosion(transform.position);
         }
     }
 }

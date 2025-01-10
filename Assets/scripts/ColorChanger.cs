@@ -3,16 +3,24 @@ using UnityEngine;
 [RequireComponent(typeof(Renderer))]
 public class ColorChanger : MonoBehaviour
 {
-    public void ChangeColor()
+    private Renderer _renderer;
+
+    private void Awake()
     {
-        Renderer renderer = GetComponent<Renderer>();
-        if (renderer != null)
-        {
-            renderer.material.color = Random.ColorHSV();
-        }
-        else
+        _renderer = GetComponent<Renderer>();
+
+        if (_renderer == null)
         {
             Debug.LogError("Renderer отсутствует! Убедитесь, что компонент добавлен.");
         }
     }
+
+    public void ChangeColor()
+    {
+        if (_renderer != null)
+        {
+            _renderer.material.color = Random.ColorHSV();
+        }
+    }
 }
+
