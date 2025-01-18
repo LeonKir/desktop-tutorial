@@ -8,31 +8,15 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-    private CubeSpawner _cubeSpawner;
     private ColorChanger _colorChanger;
     private ExplosionHandler _explosionHandler;
     private float _splitChance = 1.0f;
 
-    private void Awake()
+    [SerializeField] private CubeSpawner _spawner;
+
+    public float GetSplitChance()
     {
-        _cubeSpawner = FindObjectOfType<CubeSpawner>();
-        _colorChanger = GetComponent<ColorChanger>();
-        _explosionHandler = GetComponent<ExplosionHandler>();
-
-        if (_cubeSpawner == null)
-        {
-            Debug.LogError("CubeSpawner не найден в сцене. Добавьте объект с CubeSpawner!");
-        }
-
-        if (_colorChanger == null)
-        {
-            Debug.LogError("ColorChanger отсутствует на кубе!");
-        }
-
-        if (_explosionHandler == null)
-        {
-            Debug.LogError("ExplosionHandler отсутствует на кубе!");
-        }
+        return _splitChance;
     }
 
     public void SetSplitChance(float chance)
@@ -50,6 +34,27 @@ public class Cube : MonoBehaviour
         _explosionHandler?.ApplyExplosion(explosionPosition);
     }
 
+    private void Awake()
+    {
+        _colorChanger = GetComponent<ColorChanger>();
+        _explosionHandler = GetComponent<ExplosionHandler>();
+
+        if (_colorChanger == null)
+        {
+            Debug.LogError("ColorChanger отсутствует на кубе!");
+        }
+
+        if (_explosionHandler == null)
+        {
+            Debug.LogError("ExplosionHandler отсутствует на кубе!");
+        }
+
+        if (_spawner == null)
+        {
+            Debug.LogError("CubeSpawner не назначен! Убедитесь, что спавнер установлен.");
+        }
+    }
+
     private void OnMouseDown()
     {
         if (Random.value <= _splitChance)
@@ -62,24 +67,18 @@ public class Cube : MonoBehaviour
 
     private void SplitCube()
     {
-        if (_cubeSpawner == null)
-        {
-            Debug.LogError("CubeSpawner отсутствует! Убедитесь, что он добавлен в сцене.");
-            return;
-        }
-
         int minCountCubes = 2;
         int maxCountCubes = 7;
         int newCubesCount = Random.Range(minCountCubes, maxCountCubes);
         float bias = 0.5f;
-        float decreaseСhance = 2.0f;
+        float decreaseChance = 2.0f;
 
         for (int i = 0; i < newCubesCount; i++)
         {
-            Cube newCube = _cubeSpawner.SpawnCube(
+            Cube newCube = _spawner.SpawnCube(
                 transform.position + Random.insideUnitSphere * bias,
                 transform.localScale * bias,
-                _splitChance / decreaseСhance
+                _splitChance / decreaseChance
             );
 
             newCube.ChangeColor();
