@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Renderer))]
+
 public class ColorChanger : MonoBehaviour
 {
     private Renderer _renderer;
@@ -12,13 +13,9 @@ public class ColorChanger : MonoBehaviour
             _renderer.material.color = Random.ColorHSV();
         }
     }
+
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
-
-        if (_renderer == null)
-        {
-            Debug.LogError("Renderer отсутствует! Убедитесь, что компонент добавлен.");
-        }
     }
 }

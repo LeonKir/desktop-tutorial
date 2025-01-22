@@ -4,18 +4,14 @@ using UnityEngine;
 
 public class ExplosionHandler : MonoBehaviour
 {
-    public void ApplyExplosion(Vector3 explosionPosition, float force = 10f, float radius = 5f)
+    public void ApplyExplosion(Vector3 explosionPosition, float force = 10f)
     {
-        Rigidbody rb = GetComponent<Rigidbody>();
+        Rigidbody rigidbody = GetComponent<Rigidbody>();
 
-        if (rb != null)
+        if (rigidbody != null)
         {
             Vector3 explosionDir = (transform.position - explosionPosition).normalized;
-            rb.AddForce(explosionDir * force, ForceMode.Impulse);
-        }
-        else
-        {
-            Debug.LogError("Rigidbody отсутствует! Убедитесь, что компонент добавлен.");
+            rigidbody.AddForce(explosionDir * force, ForceMode.Impulse);
         }
     }
 }

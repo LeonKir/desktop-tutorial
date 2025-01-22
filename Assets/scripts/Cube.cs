@@ -8,52 +8,11 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
+    [SerializeField] private CubeSpawner _spawner;
+
     private ColorChanger _colorChanger;
     private ExplosionHandler _explosionHandler;
     private float _splitChance = 1.0f;
-
-    [SerializeField] private CubeSpawner _spawner;
-
-    public float GetSplitChance()
-    {
-        return _splitChance;
-    }
-
-    public void SetSplitChance(float chance)
-    {
-        _splitChance = chance;
-    }
-
-    public void ChangeColor()
-    {
-        _colorChanger?.ChangeColor();
-    }
-
-    public void ApplyExplosion(Vector3 explosionPosition)
-    {
-        _explosionHandler?.ApplyExplosion(explosionPosition);
-    }
-
-    private void Awake()
-    {
-        _colorChanger = GetComponent<ColorChanger>();
-        _explosionHandler = GetComponent<ExplosionHandler>();
-
-        if (_colorChanger == null)
-        {
-            Debug.LogError("ColorChanger отсутствует на кубе!");
-        }
-
-        if (_explosionHandler == null)
-        {
-            Debug.LogError("ExplosionHandler отсутствует на кубе!");
-        }
-
-        if (_spawner == null)
-        {
-            Debug.LogError("CubeSpawner не назначен! Убедитесь, что спавнер установлен.");
-        }
-    }
 
     private void OnMouseDown()
     {
@@ -63,6 +22,27 @@ public class Cube : MonoBehaviour
         }
 
         Destroy(gameObject);
+    }
+
+    public void SetSplitChance(float chance)
+    {
+        _splitChance = chance;
+    }
+
+    private void ChangeColor()
+    {
+        _colorChanger?.ChangeColor();
+    }
+
+    private void ApplyExplosion(Vector3 explosionPosition)
+    {
+        _explosionHandler?.ApplyExplosion(explosionPosition);
+    }
+
+    private void Awake()
+    {
+        _colorChanger = GetComponent<ColorChanger>();
+        _explosionHandler = GetComponent<ExplosionHandler>();
     }
 
     private void SplitCube()
