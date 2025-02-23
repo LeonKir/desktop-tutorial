@@ -1,51 +1,35 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Renderer))]
-[RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(ColorChanger))]
 [RequireComponent(typeof(ExplosionHandler))]
 
 public class Cube : MonoBehaviour
 {
-    [SerializeField] private CubeSpawner _spawner;
-
-    private ColorChanger _colorChanger;
-    private ExplosionHandler _explosionHandler;
     private float _splitChance = 1.0f;
-
-    private void OnMouseDown()
-    {
-        if (Random.value <= _splitChance)
-        {
-            SplitCube();
-        }
-
-        Destroy(gameObject);
-    }
+    private ColorChanger _colorChanger;
+    private CubeSpawner _spawner;
 
     public void SetSplitChance(float chance)
     {
         _splitChance = chance;
     }
 
-    private void ChangeColor()
+    public void ChangeColor()
     {
         _colorChanger?.ChangeColor();
     }
 
-    private void ApplyExplosion(Vector3 explosionPosition)
+    public void Split()
     {
-        _explosionHandler?.ApplyExplosion(explosionPosition);
+        if (Random.value <= _splitChance)
+        {
+            CreateNewCubes();
+        }
+
+        Destroy(gameObject);
     }
 
-    private void Awake()
-    {
-        _colorChanger = GetComponent<ColorChanger>();
-        _explosionHandler = GetComponent<ExplosionHandler>();
-    }
-
-    private void SplitCube()
+    private void CreateNewCubes()
     {
         int minCountCubes = 2;
         int maxCountCubes = 7;
@@ -57,12 +41,18 @@ public class Cube : MonoBehaviour
         {
             Cube newCube = _spawner.SpawnCube(
                 transform.position + Random.insideUnitSphere * bias,
-                transform.localScale * bias,
+                transform.localScale * 0.5f,
                 _splitChance / decreaseChance
             );
 
             newCube.ChangeColor();
-            newCube.ApplyExplosion(transform.position);
+            newCube.GetComponent<ExplosionHandler>().ApplyExplosion(transform.position);
         }
+    }
+
+    private void Awake()
+    {
+        _colorChanger = GetComponent<ColorChanger>();
+        _spawner = FindObjectOfType<CubeSpawner>();
     }
 }
