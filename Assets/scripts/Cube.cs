@@ -9,6 +9,12 @@ public class Cube : MonoBehaviour
     private ColorChanger _colorChanger;
     private CubeSpawner _spawner;
 
+    private void Awake()
+    {
+        _colorChanger = GetComponent<ColorChanger>();
+        _spawner = FindObjectOfType<CubeSpawner>();
+    }
+
     public void SetSplitChance(float chance)
     {
         _splitChance = chance;
@@ -23,36 +29,14 @@ public class Cube : MonoBehaviour
     {
         if (Random.value <= _splitChance)
         {
-            CreateNewCubes();
+            _spawner.RequestSplit(this);
         }
 
         Destroy(gameObject);
     }
 
-    private void CreateNewCubes()
+    public float GetSplitChance()
     {
-        int minCountCubes = 2;
-        int maxCountCubes = 7;
-        int newCubesCount = Random.Range(minCountCubes, maxCountCubes);
-        float bias = 0.5f;
-        float decreaseChance = 2.0f;
-
-        for (int i = 0; i < newCubesCount; i++)
-        {
-            Cube newCube = _spawner.SpawnCube(
-                transform.position + Random.insideUnitSphere * bias,
-                transform.localScale * 0.5f,
-                _splitChance / decreaseChance
-            );
-
-            newCube.ChangeColor();
-            newCube.GetComponent<ExplosionHandler>().ApplyExplosion(transform.position);
-        }
-    }
-
-    private void Awake()
-    {
-        _colorChanger = GetComponent<ColorChanger>();
-        _spawner = FindObjectOfType<CubeSpawner>();
+        return _splitChance;
     }
 }

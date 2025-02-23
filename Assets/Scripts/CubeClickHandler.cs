@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CubeManager : MonoBehaviour
+public class CubeClickHandler : MonoBehaviour
 {
     [SerializeField] private CubeSpawner _spawner;
     [SerializeField] private float _explosionForce = 10f;
@@ -33,9 +33,9 @@ public class CubeManager : MonoBehaviour
     {
         Rigidbody[] rigidbodies = FindObjectsOfType<Rigidbody>();
 
-        foreach (var rb in rigidbodies)
+        foreach (var rigidbodi in rigidbodies)
         {
-            if (rb.TryGetComponent(out ExplosionHandler explosionHandler))
+            if (rigidbodi.TryGetComponent(out ExplosionHandler explosionHandler))
             {
                 explosionHandler.ApplyExplosion(explosionPosition, _explosionForce);
             }
